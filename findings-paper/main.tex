@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\usepackage[sort&compress,round,semicolon,authoryear]{natbib}
+\usepackage[figurename=Fig.,labelfont=bf,labelsep=period]{caption}
+
+\title{When Braess Paradox Runs Induced Demand in Reverse}
+\author{David Levinson}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Induced demand is usually stated as lower generalized cost producing more travel. A Braess network can reverse the sign of that comparative static: an added link may raise user-equilibrium cost, and elastic demand then falls. I connect these literatures in a transparent four-node network with linear link costs and inverse demand. In the default case, the added link raises elastic equilibrium cost from 64.29 to 72.00 and reduces demand from 3.86 to 3.60. Across a 572-point parameter grid, 48.4\% of cases produce Braess paradox with reduced demand.
+\end{abstract}
+
+\textit{Keywords:} Braess paradox, induced demand, elastic demand, user equilibrium, network design
+
+\section{Questions}
+
+Induced demand is commonly described as the response of travel to lower generalized cost. Lee, Klein, and Camus define induced traffic as movement along a travel-demand curve, where price includes travel time and other user costs \citep{lee1999induced}. The same demand curve has a reverse implication: if generalized cost rises, equilibrium travel should fall. Empirical studies of capacity reduction describe related outcomes as reduced, suppressed, or disappearing traffic \citep{goodwin1998capacity,cairns2002disappearing,behrens2004capacity,zhu2010i35w}.
+
+Braess paradox supplies a network mechanism for this reverse case. Under user equilibrium, adding a link can increase travelers' costs rather than reduce them \citep{braess1968paradoxon,braess2005paradox,murchland1970braess,yang1998capacity}. Prior work gives tests for equilibrium cost changes under demand changes and added routes \citep{dafermos1984paradoxes}, shows that Braess effects can disappear as demand rises \citep{nagurney2010negation}, and examines elastic-demand traffic paradoxes \citep{hallefjord1994traffic,tu2019traffic,nagurney2020braess}. This note connects those strands by classifying when an added Braess link produces reduced demand. I ask two questions:
+
+\begin{enumerate}
+  \item In a transparent canonical Braess network, when does an added link produce reduced demand under a downward-sloping inverse-demand curve?
+  \item Over a small parameter grid, how is the elastic-demand outcome space divided among the main response classes?
+\end{enumerate}
+
+\section{Methods}
+
+I implemented Braess Explorer, a browser-only JavaScript app for inspecting the four-node Braess network, changing link costs and demand parameters, and exporting the sweeps used here. The network has one origin-destination pair, two variable-cost links, two constant-cost links, and one candidate middle link. The default link performance functions are
+\[
+t_1(x)=10x,\quad t_4(x)=10x,\quad t_2(x)=45,\quad t_3(x)=45,\quad t_5(x)=0,
+\]
+with fixed demand \(q=6\). The candidate link is solved both off and on.
+
+For each scenario, the model enumerates all simple origin-destination paths and solves static Wardrop user equilibrium by Method of Successive Averages. At each iteration, link costs are evaluated from current flows, all demand is assigned to the current shortest path, and path flows are averaged using step size \(1/k\). The stopping tolerance is \(10^{-6}\) after at least five iterations, with a 120-iteration maximum.
+
+Elastic demand uses inverse demand
+\[
+C(q)=A-Bq.
+\]
+The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand intercept remains \(A/B=6\). For each trial \(q\), the model solves fixed-demand equilibrium and compares equilibrium cost with \(A-Bq\). A bisection loop finds the quantity where willingness to pay equals equilibrium cost.
+
+The Braess flag is \(c_{\mathrm{on}}-c_{\mathrm{off}}>10^{-5}\). The reduced-demand flag is Braess plus \(q_{\mathrm{on}}<q_{\mathrm{off}}\). I also sweep \(A\in[90,270]\), \(B\in[15,45]\), and the variable-link coefficient \(b\in[4,16]\), using 13, 11, and 4 steps respectively, for 572 grid points. Code, CSV output, and figures are generated from the same repository as the browser app.
+
+\section{Findings}
+
+The fixed-demand default reproduces the Braess paradox. Without the added link, equilibrium cost is 75.00. With the added link, equilibrium cost is 90.00, a 15.00-unit increase. Total travel time rises from 450.00 to 540.00.
+
+The elastic-demand default converts the same network effect into reduced demand. With \(A=180\) and \(B=30\), the added link raises equilibrium cost from 64.29 to 72.00 and lowers equilibrium demand from 3.86 to 3.60 (Fig.~\ref{fig:default}). The result is the induced-demand comparative static with the network-cost sign reversed: the link changes equilibrium route costs first, and the elastic-demand curve then selects the lower quantity.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\linewidth]{figures/figure-1-default-comparison.jpeg}
+\caption{Default Braess comparison. The first panel shows the directed Braess network and link performance functions; the demand-curve panel places the OFF and ON elastic equilibria on \(C(q)\); the remaining panels compare cost and demand under fixed and elastic assumptions.}
+  \label{fig:default}
+\end{figure}
+
+The outcome-space sweep shows that the connection is not isolated to one hand-picked demand curve. Of 572 A-B-\(b\) grid points, 277 (48.4\%) show Braess paradox with reduced demand, 40 (7.0\%) show Braess paradox with no demand change within tolerance, 8 (1.4\%) show no paradox with no demand change, and 247 (43.2\%) show no paradox with increased demand (Table~\ref{tab:classes}; Fig.~\ref{fig:space}). The two sign-inconsistent cases under a downward-sloping inverse-demand curve, Braess with increased demand and no Braess with reduced demand, have zero grid points.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{lrr}
+    \toprule
+    Outcome class & Grid points & Share \\
+    \midrule
+    Braess paradox / reduced demand & 277 & 48.4\% \\
+    Braess paradox / no demand change & 40 & 7.0\% \\
+    No Braess paradox / no demand change & 8 & 1.4\% \\
+    No Braess paradox / increased demand & 247 & 43.2\% \\
+    Braess paradox / increased demand & 0 & 0.0\% \\
+    No Braess paradox / reduced demand & 0 & 0.0\% \\
+    \bottomrule
+  \end{tabular}
+  \caption{Classification of the 572-point elastic-demand outcome-space sweep.}
+  \label{tab:classes}
+\end{table}
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=\linewidth]{figures/figure-2-elastic-outcome-space.jpeg}
+  \caption{Elastic-demand outcome space over inverse-demand intercept \(A\), inverse-demand slope \(B\), and variable-link coefficient \(b\).}
+  \label{fig:space}
+\end{figure}
+
+The outcome map gives a compact diagnostic for interpreting added capacity under elastic demand. Green cells are the familiar induced-demand case: the added link does not worsen equilibrium cost and demand increases. Maroon cells are the reverse case: the added link worsens equilibrium cost through Braess paradox and demand falls. The same demand law appears in both regions; the network determines which sign is expressed.
+
+\section*{Data Availability}
+
+The Braess Explorer app, model code, export scripts, CSV files, and figures are in the project repository. The app runs entirely in the browser from \path{web/index.html}, allowing readers to edit the network, move the demand curve, rerun the default comparison, and export new sweep results. The main exported files are in the \path{findings-paper/data/} folder, and the manuscript figures are in \path{findings-paper/figures/}.
+
+\section*{Acknowledgments}
+
+This draft was prepared from the browser-only Braess Explorer model and its exported numerical results.
+
+\bibliographystyle{chicago}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-05-03T03:11:01.253Z",
+  "model": "Canonical Braess network with inverse demand C(q) = A - Bq",
+  "defaults": {
+    "fixedDemand": 6,
+    "inverseDemandA": 180,
+    "inverseDemandB": 30,
+    "variableCostB": 10,
+    "constantLinkCost": 45,
+    "candidateLinkCost": 0,
+    "classificationTolerance": 0.00001
+  },
+  "fixed": {
+    "offCost": 75,
+    "onCost": 90,
+    "deltaCost": 15,
+    "paradox": true,
+    "offTotalTravelTime": 450,
+    "onTotalTravelTime": 540,
+    "deltaTotalTravelTime": 90
+  },
+  "elastic": {
+    "offDemand": 3.8571624755859375,
+    "onDemand": 3.5999908447265625,
+    "deltaDemand": -0.257171630859375,
+    "offCost": 64.28581237792969,
+    "onCost": 71.99981689453125,
+    "deltaCost": 7.7140045166015625,
+    "paradox": true,
+    "reducedDemand": true,
+    "offTotalWelfare": -24.797936273971573,
+    "onTotalWelfare": -64.79802246554755,
+    "deltaTotalWelfare": -40.000086191575974
+  },
+  "outcomeSpace": {
+    "config": {
+      "aMin": 90,
+      "aMax": 270,
+      "aSteps": 13,
+      "bMin": 15,
+      "bMax": 45,
+      "bSteps": 11,
+      "zParameter": "variableCostB",
+      "zMin": 4,
+      "zMax": 16,
+      "zSteps": 4
+    },
+    "gridPoints": 572,
+    "classCounts": {
+      "BP_RD": 277,
+      "BP_NRD": 40,
+      "BP_ID": 0,
+      "NBP_RD": 0,
+      "NBP_NRD": 8,
+      "NBP_ID": 247
+    }
+  }
+}

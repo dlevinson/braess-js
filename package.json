@@ -1,0 +1,22 @@
+{
+  "name": "braess",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node ./tools/build-web-runtime.mjs",
+    "build:vite": "vite build",
+    "build:web": "node ./tools/build-web-runtime.mjs",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "d3": "^7.9.0",
+    "papaparse": "^5.5.3"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5",
+    "vitest": "^2.1.8"
+  }
+}

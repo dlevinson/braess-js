@@ -1,0 +1,6 @@
+link_id,from_node_id,to_node_id,length,capacity,free_speed,lanes,link_type,cost_function_type,cost_a,cost_b,bpr_alpha,bpr_beta,enabled,candidate_flag,parameter_group,label
+1,1,2,1,10,1,1,road,affine,0,10,0.15,4,true,false,variable,Origin to Upper
+2,1,3,1,10,1,1,road,affine,45,0,0.15,4,true,false,constant,Origin to Lower
+3,2,4,1,10,1,1,road,affine,45,0,0.15,4,true,false,constant,Upper to Destination
+4,3,4,1,10,1,1,road,affine,0,10,0.15,4,true,false,variable,Lower to Destination
+5,2,3,1,10,1,1,road,affine,0,0,0.15,4,false,true,candidate,Upper to Lower

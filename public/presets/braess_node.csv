@@ -1,0 +1,5 @@
+node_id,x_coord,y_coord,zone_id,node_type,label
+1,0,0,1,origin,Origin
+2,1,1,,intersection,Upper
+3,1,-1,,intersection,Lower
+4,2,0,4,destination,Destination

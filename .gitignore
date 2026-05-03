@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+.tmp-bundle/
+
+# LaTeX build products; keep source, figures, data, and final PDF.
+*.aux
+*.bbl
+*.blg
+*.log
+*.out

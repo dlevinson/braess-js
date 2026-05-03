@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Braess Model Documentation</title>
+    <style>
+      :root {
+        --ink: #102542;
+        --muted: #5e728f;
+        --line: #d9e4ee;
+        --paper: #ffffff;
+        --wash: #f5f9fc;
+        --navy: #183456;
+        --teal: #1c7c7c;
+        --amber: #b66b15;
+        --maroon: #5b1136;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Avenir Next", "Segoe UI", sans-serif;
+        line-height: 1.6;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(28, 124, 124, 0.16), transparent 32rem),
+          linear-gradient(180deg, #f8fbfd 0%, #edf4f8 100%);
+      }
+
+      main {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+      }
+
+      header,
+      section {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--line);
+        border-radius: 1.25rem;
+        box-shadow: 0 18px 40px rgba(16, 37, 66, 0.08);
+        margin: 1rem 0;
+        padding: 1.25rem;
+      }
+
+      .eyebrow {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        margin: 0 0 0.25rem;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.15;
+        margin: 0.35rem 0 0.75rem;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        letter-spacing: -0.05em;
+      }
+
+      h2 {
+        color: var(--navy);
+        font-size: clamp(1.45rem, 3vw, 2.1rem);
+        letter-spacing: -0.03em;
+      }
+
+      h3 {
+        color: var(--teal);
+        font-size: 1.05rem;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+      }
+
+      a {
+        color: var(--teal);
+        font-weight: 700;
+      }
+
+      code {
+        background: #e8f1f4;
+        border-radius: 0.35rem;
+        color: var(--navy);
+        padding: 0.1rem 0.3rem;
+      }
+
+      pre {
+        background: var(--navy);
+        border-radius: 1rem;
+        color: #f7fbfd;
+        line-height: 1.45;
+        overflow: auto;
+        padding: 1rem;
+      }
+
+      table {
+        border-collapse: collapse;
+        margin: 0.75rem 0 1rem;
+        width: 100%;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 0.65rem 0.5rem;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--navy);
+      }
+
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .card {
+        background: var(--wash);
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        padding: 1rem;
+      }
+
+      .callout {
+        background: rgba(28, 124, 124, 0.1);
+        border-left: 0.35rem solid var(--teal);
+        border-radius: 0.9rem;
+        padding: 0.9rem 1rem;
+      }
+
+      .warning {
+        background: rgba(182, 107, 21, 0.12);
+        border-left-color: var(--amber);
+      }
+
+      .maroon {
+        color: var(--maroon);
+        font-weight: 800;
+      }
+
+      .toc {
+        columns: 2 260px;
+        margin: 0.5rem 0 0;
+        padding-left: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <p class="eyebrow">Braess Explorer</p>
+        <h1>Model documentation</h1>
+        <p>
+          This app is a browser-only research toy for exploring how a new link can change static user equilibrium,
+          and how elastic demand converts higher generalized cost into lower equilibrium trips. It is deliberately
+          transparent: one OD pair, small directed networks, visible cost functions, and numerical methods simple
+          enough to inspect.
+        </p>
+        <ul class="toc">
+          <li><a href="#network">Network and candidate link</a></li>
+          <li><a href="#costs">Link performance functions</a></li>
+          <li><a href="#fixed">Fixed-demand equilibrium</a></li>
+          <li><a href="#elastic">Elastic-demand equilibrium</a></li>
+          <li><a href="#metrics">Metrics and flags</a></li>
+          <li><a href="#default">Default Braess case</a></li>
+          <li><a href="#maps">Sweeps and outcome maps</a></li>
+          <li><a href="#editing">Network editing semantics</a></li>
+          <li><a href="#limits">Limitations</a></li>
+        </ul>
+      </header>
+
+      <section id="network">
+        <p class="eyebrow">Network</p>
+        <h2>Network and candidate link</h2>
+        <p>
+          The app solves a directed road network with one origin zone and one destination zone. The built-in preset is
+          the classic four-node Braess topology: Origin, Upper, Lower, and Destination. The candidate link is the middle
+          directed link from Upper to Lower.
+        </p>
+        <p>
+          Each comparison is solved twice. In the <strong>without added link</strong> case, the candidate link is disabled.
+          In the <strong>with added link</strong> case, the candidate link is enabled only if it has positive lanes and
+          positive capacity. This is why the app can show the link geometrically while still treating it as closed or
+          not added.
+        </p>
+        <div class="callout">
+          <p>
+            The map view can show either scenario. The mathematical comparison is not a visual toggle: OFF and ON are
+            separately built networks, separately solved, and then compared.
+          </p>
+        </div>
+      </section>
+
+      <section id="costs">
+        <p class="eyebrow">Costs</p>
+        <h2>Link performance functions</h2>
+        <p>
+          Link costs are deterministic functions of link flow. The app supports affine and BPR-style costs. The current
+          solver treats the reported link cost as generalized cost, so the units are intentionally abstract: minutes,
+          dollars, utility-scaled time, or toy units, as long as the same units are used consistently.
+        </p>
+        <pre>Affine: t_l(x_l) = a_l + b_l x_l
+
+BPR:    t_l(x_l) = t0_l * (1 + alpha_l * (x_l / capacity_l)^beta_l)</pre>
+        <p>
+          For BPR links, <code>t0</code> comes from a positive cost-a override when one is supplied. Otherwise it is
+          computed as <code>length / free_speed</code>. For affine links, length does not automatically enter the cost
+          unless the user edits the cost parameters to make it do so.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>UI field</th>
+              <th>Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>a</code> / t0 override</td>
+              <td>Affine intercept, or BPR free-flow-time override if the BPR model is selected.</td>
+            </tr>
+            <tr>
+              <td><code>b</code></td>
+              <td>Affine congestion slope. Higher values make cost rise faster with flow.</td>
+            </tr>
+            <tr>
+              <td><code>capacity</code></td>
+              <td>Used directly in BPR costs and also determines whether a link is structurally open.</td>
+            </tr>
+            <tr>
+              <td><code>lanes</code></td>
+              <td>Determines whether a link is structurally open. A link with zero lanes is closed.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="fixed">
+        <p class="eyebrow">Equilibrium</p>
+        <h2>Fixed-demand user equilibrium</h2>
+        <p>
+          In fixed-demand mode, demand is held at <code>Initial trips</code>. The app enumerates all simple OD paths in
+          the enabled scenario network and solves Wardrop user equilibrium using Method of Successive Averages.
+        </p>
+        <pre>Start with zero path flows.
+For iteration k = 1, 2, ...
+  1. Convert path flows into link flows.
+  2. Evaluate link costs from current link flows.
+  3. Find the shortest currently available OD path.
+  4. Assign all demand to that shortest path.
+  5. Average the assignment into the current path flows:
+       f_path(k) = f_path(k-1) + (1/k) * (aon_path - f_path(k-1))</pre>
+        <p>
+          The convergence chart reports the relative gap: the flow-weighted excess path cost above the current shortest
+          path cost, divided by demand times shortest-path cost. The solver stops after at least five iterations once
+          the gap is below tolerance, or after the maximum iteration count.
+        </p>
+        <p>
+          Equilibrium generalized cost is computed as the demand-weighted average path cost in the final path-flow
+          vector. For a well-converged user equilibrium, used paths should have nearly equal costs.
+        </p>
+      </section>
+
+      <section id="elastic">
+        <p class="eyebrow">Demand response</p>
+        <h2>Elastic-demand equilibrium</h2>
+        <p>
+          Elastic demand uses a linear inverse-demand curve:
+        </p>
+        <pre>C(q) = A - Bq</pre>
+        <p>
+          Here <code>A</code> is the willingness-to-pay intercept, <code>B</code> is the slope, and
+          <code>A / B</code> is the zero-cost X-intercept. The app labels that X-intercept as
+          <strong>Initial trips</strong>, because it is the demand scale shown in the demand-curve editor. In fixed-demand
+          mode, Initial trips is the actual fixed quantity. In elastic mode, Initial trips is the demand-curve intercept,
+          not necessarily the equilibrium demand.
+        </p>
+        <p>
+          The elastic solver wraps the fixed-demand solver in an outer bisection search on <code>q</code>. For each trial
+          quantity, it solves fixed-demand equilibrium and compares the network equilibrium cost with the inverse-demand
+          willingness to pay.
+        </p>
+        <pre>Find q such that:
+  equilibrium network cost at q = A - Bq</pre>
+        <p>
+          If the no-flow OD travel cost is already greater than or equal to <code>A</code>, the app reports zero elastic
+          demand. That means the demand curve chokes off before any positive trips are willing to use the network.
+        </p>
+      </section>
+
+      <section id="metrics">
+        <p class="eyebrow">Outputs</p>
+        <h2>Metrics and classification flags</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Equilibrium cost</h3>
+            <p>The average generalized cost experienced by equilibrium users in the scenario.</p>
+          </div>
+          <div class="card">
+            <h3>Demand</h3>
+            <p>Fixed trips in fixed-demand mode, or the solved quantity where willingness to pay equals cost in elastic mode.</p>
+          </div>
+          <div class="card">
+            <h3>Total travel time</h3>
+            <p>The sum over enabled links of flow times link cost.</p>
+          </div>
+          <div class="card">
+            <h3>Average travel time</h3>
+            <p>Total travel time divided by demand, falling back to equilibrium cost when demand is zero.</p>
+          </div>
+        </div>
+        <pre>Total system travel time = sum_l x_l t_l(x_l)
+
+Consumer surplus = integral from 0 to q of (A - Bz) dz - C_eq q
+                 = A q - 0.5 B q^2 - C_eq q
+
+Total welfare = consumer surplus - total system travel time</pre>
+        <p>
+          Consumer surplus is only reported for elastic-demand runs. In fixed-demand mode it is set to zero because the
+          current model is not using inverse demand to choose quantity.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Flag</th>
+              <th>Definition</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Braess paradox</td>
+              <td><code>cost_on - cost_off &gt; tolerance</code></td>
+            </tr>
+            <tr>
+              <td>Reduced demand</td>
+              <td><code>cost_on &gt; cost_off</code> and <code>demand_on &lt; demand_off</code>, both by tolerance.</td>
+            </tr>
+            <tr>
+              <td>Welfare loss</td>
+              <td><code>welfare_on - welfare_off &lt; -tolerance</code></td>
+            </tr>
+            <tr>
+              <td>Consumer-surplus loss</td>
+              <td><code>consumer_surplus_on - consumer_surplus_off &lt; -tolerance</code></td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          The reduced-demand interpretation is intentionally narrow. It is not asking whether elastic demand is lower
+          than fixed demand. It asks whether the <em>added-link scenario</em> carries fewer trips than the no-link scenario
+          under the same elastic-demand curve. This is induced demand running in reverse: a network change raises
+          equilibrium cost, so the elastic equilibrium moves to a lower quantity.
+        </p>
+      </section>
+
+      <section id="default">
+        <p class="eyebrow">Preset</p>
+        <h2>Default Braess case</h2>
+        <p>
+          The default network is calibrated so the fixed-demand Braess paradox is visible and the default elastic-demand
+          case also produces reduced demand.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Default</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Variable links</td>
+              <td>Origin to Upper and Lower to Destination: <code>t(x) = 10x</code></td>
+            </tr>
+            <tr>
+              <td>Constant links</td>
+              <td>Origin to Lower and Upper to Destination: <code>t(x) = 45</code></td>
+            </tr>
+            <tr>
+              <td>Candidate middle link</td>
+              <td>Upper to Lower: <code>t(x) = 0</code> when structurally open and included in the ON scenario.</td>
+            </tr>
+            <tr>
+              <td>Fixed demand</td>
+              <td><code>Initial trips = 6</code> normalized toy demand packets.</td>
+            </tr>
+            <tr>
+              <td>Elastic demand</td>
+              <td><code>A = 180</code>, <code>B = 30</code>, so the zero-cost intercept is <code>A / B = 6</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          With these defaults, the fixed-demand run has the classic structure: the added middle link attracts users into
+          individually rational route choices that raise equilibrium cost. Under the default elastic curve, that higher
+          ON cost also lowers equilibrium demand relative to the OFF case.
+        </p>
+      </section>
+
+      <section id="maps">
+        <p class="eyebrow">Parameter space</p>
+        <h2>Sweeps and outcome maps</h2>
+        <p>
+          The 2D sweep solves the OFF and ON scenarios for each cell in a user-defined parameter grid. The app stores one
+          row per cell with OFF demand, ON demand, OFF cost, ON cost, deltas, and classification flags. The heatmap can
+          show binary regions such as Braess paradox or continuous deltas such as change in cost or change in demand.
+        </p>
+        <p>
+          The elastic outcome map focuses on demand assumptions. It varies <code>A</code> and <code>B</code>, then optionally
+          varies a third parameter <code>Z</code>, such as variable-link coefficient <code>b</code>, constant-link cost, or
+          candidate-link cost. Each A-B-Z point is classified by Braess status and demand response.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Meaning</th>
+              <th>Shown?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="maroon">BP / reduced demand</span></td>
+              <td>The added link worsens cost and lowers elastic demand.</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>BP / no demand change</td>
+              <td>The added link worsens cost but demand is equal within tolerance.</td>
+              <td>Hidden in the 3D legend when it has zero count.</td>
+            </tr>
+            <tr>
+              <td>BP / increased demand</td>
+              <td>Generally inconsistent with a downward-sloping inverse demand curve when cost rises.</td>
+              <td>Logically prohibited for normal positive-slope demand response, so hidden when absent.</td>
+            </tr>
+            <tr>
+              <td>No BP / reduced demand</td>
+              <td>Generally inconsistent with lower-or-equal ON cost under the same downward-sloping demand curve.</td>
+              <td>Logically prohibited for normal positive-slope demand response, so hidden when absent.</td>
+            </tr>
+            <tr>
+              <td>No BP / no demand change</td>
+              <td>The added link does not worsen cost and demand is equal within tolerance.</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>No BP / increased demand</td>
+              <td>The added link does not worsen cost and elastic demand rises.</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout warning">
+          <p>
+            The outcome maps are numerical experiments. Coarse grids can miss boundaries, and very large grids may be
+            slow in Safari because each point solves both OFF and ON equilibria. Use smaller step counts while exploring,
+            then refine once the interesting region is visible.
+          </p>
+        </div>
+      </section>
+
+      <section id="editing">
+        <p class="eyebrow">Editing</p>
+        <h2>Network editing semantics</h2>
+        <p>
+          Network editing is direct and local. Clicking a link exposes that link's own lanes, capacity, length, free
+          speed, cost-function type, and cost parameters. Clicking a node exposes node coordinates. Dragging a node
+          changes the drawing geometry and updates connected link lengths in proportion to the change in screen-space
+          distance from the original preset geometry.
+        </p>
+        <p>
+          The model does not pretend that drawing geometry alone is a complete traffic model. For affine costs, changing
+          length changes displayed link length but does not change cost unless cost parameters are changed. For BPR costs,
+          length can affect free-flow time when no positive t0 override is supplied.
+        </p>
+        <p>
+          Closing a link is structural: a link with zero lanes or zero capacity is disabled. The candidate link also
+          requires the ON scenario to be active before it contributes to route choice.
+        </p>
+      </section>
+
+      <section id="limits">
+        <p class="eyebrow">Scope</p>
+        <h2>Limitations and extension points</h2>
+        <p>
+          This app is not a production traffic assignment engine. The deliberate constraints keep the model inspectable:
+          one OD pair, small directed networks, simple-path enumeration, static user equilibrium, and a single inverse
+          demand model.
+        </p>
+        <p>
+          Natural next extensions are multiple OD pairs, social optimum comparison, marginal-cost tolling, constant
+          elasticity demand, richer path displays, and larger-network algorithms that avoid enumerating all simple paths.
+          Those should be added carefully, because the app's main research value is that users can see exactly which
+          assumptions produce Braess paradox, induced demand, or reduced demand.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
