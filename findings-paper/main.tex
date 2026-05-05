@@ -5,6 +5,8 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage[sort&compress,round,semicolon,authoryear]{natbib}
 \usepackage[figurename=Fig.,labelfont=bf,labelsep=period]{caption}
@@ -51,7 +53,33 @@ The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand in
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.92\linewidth]{figures/figure-3-elastic-feedback.jpeg}
+  \begin{tikzpicture}[
+    node distance=0.85cm and 0.65cm,
+    >=Stealth,
+    box/.style={draw, rounded corners, align=center, minimum width=2.25cm, minimum height=0.75cm, font=\small},
+    network/.style={box, fill=gray!8, draw=gray!60},
+    assignment/.style={box, fill=blue!5, draw=blue!55!black},
+    demand/.style={box, fill=red!4, draw=red!50!black},
+    adjust/.style={box, fill=orange!8, draw=orange!70!black},
+    equilibrium/.style={box, fill=green!7, draw=green!45!black},
+    arrow/.style={->, line width=0.65pt, draw=black!65}
+  ]
+    \node[network] (network) {Network\\ON/OFF};
+    \node[network, right=of network] (trial) {Trial demand\\\(q\)};
+    \node[assignment, right=of trial] (wardrop) {Wardrop route\\assignment};
+    \node[assignment, right=of wardrop] (cost) {Network cost\\\(c(q)\)};
+    \node[demand, below=1.05cm of wardrop] (inverse) {Inverse demand\\\(C(q)=A-Bq\)};
+    \node[equilibrium, right=of inverse] (equilibrium) {Equilibrium\\\(c(q^*)=C(q^*)\)};
+    \node[adjust, left=of inverse] (adjust) {Adjust \(q\)\\if costs differ};
+
+    \draw[arrow] (network) -- (trial);
+    \draw[arrow] (trial) -- (wardrop);
+    \draw[arrow] (wardrop) -- (cost);
+    \draw[arrow] (cost) -- node[right, font=\scriptsize] {compare} (equilibrium);
+    \draw[arrow] (inverse) -- (equilibrium);
+    \draw[arrow] (inverse) -- (adjust);
+    \draw[arrow] (adjust) -- node[left, font=\scriptsize] {iterate} (trial);
+  \end{tikzpicture}
   \caption{Elastic-demand feedback. The numerical method iterates over trial quantities, but the object being solved is the fixed point where user-equilibrium generalized cost equals willingness to pay.}
   \label{fig:feedback}
 \end{figure}
