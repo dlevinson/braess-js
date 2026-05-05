@@ -43,13 +43,37 @@ t_1(x)=10x,\quad t_4(x)=10x,\quad t_2(x)=45,\quad t_3(x)=45,\quad t_5(x)=0,
 \]
 with fixed demand \(q=6\). The candidate link is solved both off and on.
 
-For each scenario, the model enumerates all simple origin-destination paths and solves static Wardrop user equilibrium by Method of Successive Averages. At each iteration, link costs are evaluated from current flows, all demand is assigned to the current shortest path, and path flows are averaged using step size \(1/k\). The stopping tolerance is \(10^{-6}\) after at least five iterations, with a 120-iteration maximum.
+For each scenario, the model enumerates all simple origin-destination paths and solves static Wardrop user equilibrium by Method of Successive Averages. At each iteration, link costs are evaluated from current flows, all demand is assigned to the current shortest path, and path flows are averaged using the diminishing step size \(1/k\). This averaging is the convergence device: it damps path switching rather than accepting the newest all-or-nothing assignment. The stopping tolerance is \(10^{-6}\) after at least five iterations, with a 120-iteration maximum. For the nonnegative affine and Bureau of Public Roads-style separable link costs used here, this is the standard monotone user-equilibrium setting. The app does not claim convergence for arbitrary non-monotone user-edited cost functions.
 
 Elastic demand uses inverse demand
 \[
 C(q)=A-Bq.
 \]
-The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand intercept remains \(A/B=6\). Computationally, the model uses an outer bisection on \(q\); for each trial quantity, it solves Wardrop equilibrium and compares the resulting network cost with \(A-Bq\). Conceptually, the elastic-demand solution is a fixed point where route flows and demand agree simultaneously: \(c(q^*)=C(q^*)\) (Fig.~\ref{fig:feedback}).
+The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand intercept remains \(A/B=6\). Computationally, the model uses an outer bisection on \(q\); for each trial quantity, it solves Wardrop equilibrium and compares the resulting network cost with \(A-Bq\). Bisection is appropriate when \(c(q)-C(q)\) is monotone over the bracket, as it is for the downward-sloping inverse demand and monotone link costs used in the reported sweeps. Conceptually, the elastic-demand solution is a fixed point where route flows and demand agree simultaneously: \(c(q^*)=C(q^*)\) (Fig.~\ref{fig:feedback}).
+
+\begin{table}[H]
+  \centering
+  \small
+  \begin{tabular}{ll}
+    \toprule
+    Symbol & Definition \\
+    \midrule
+    \(x\) & Flow on a link. \\
+    \(t_i(x)\) & Travel time on link \(i\) when its flow is \(x\). \\
+    \(q\) & Origin-destination demand in a fixed-demand or trial elastic-demand solve. \\
+    \(q^*\) & Elastic-demand equilibrium quantity. \\
+    \(C(q)\) & Inverse-demand generalized cost, or willingness to pay, at quantity \(q\). \\
+    \(A\) & Zero-trip willingness-to-pay intercept in \(C(q)=A-Bq\). \\
+    \(B\) & Inverse-demand slope; larger \(B\) means willingness to pay falls faster with \(q\). \\
+    \(c(q)\) & Wardrop equilibrium origin-destination cost after assigning quantity \(q\). \\
+    \(c_{\mathrm{on}}, c_{\mathrm{off}}\) & Equilibrium costs with the candidate link on and off. \\
+    \(q_{\mathrm{on}}, q_{\mathrm{off}}\) & Elastic equilibrium quantities with the candidate link on and off. \\
+    \(b\) & Congestion coefficient on the swept variable-cost links. \\
+    \bottomrule
+  \end{tabular}
+  \caption{Nomenclature for the model equations and comparison tests.}
+  \label{tab:nomenclature}
+\end{table}
 
 \begin{figure}[H]
   \centering
