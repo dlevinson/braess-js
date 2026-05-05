@@ -215,23 +215,90 @@ def plot_outcome_space(rows):
     save(fig, "figure-2-elastic-outcome-space")
 
 
-def plot_class_counts(summary):
-    counts = summary["outcomeSpace"]["classCounts"]
-    labels = [CLASS_LABELS[key] for key in CLASS_ORDER]
-    values = [counts.get(key, 0) for key in CLASS_ORDER]
-    colors = [CLASS_COLORS[key] for key in CLASS_ORDER]
-    total = sum(counts.values())
+def plot_elastic_feedback():
+    fig, ax = plt.subplots(figsize=(10.5, 4.8))
+    fig.patch.set_facecolor("white")
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 5.2)
+    ax.axis("off")
 
-    fig, ax = plt.subplots(figsize=(8, 4.3))
-    ax.barh(labels, values, color=colors)
-    ax.set_xlabel("Grid points")
-    ax.set_title("Outcome-space class counts")
-    ax.spines[["top", "right"]].set_visible(False)
-    ax.grid(axis="x", alpha=0.18)
-    for index, value in enumerate(values):
-        ax.text(value + max(values) * 0.015, index, f"{value} ({100 * value / total:.1f}%)", va="center")
+    def box(x, y, text, face="#eef4f8", edge="#375a7f", width=2.1, height=0.86):
+        ax.text(
+            x,
+            y,
+            text,
+            ha="center",
+            va="center",
+            fontsize=10,
+            color="#183456",
+            bbox={
+                "boxstyle": "round,pad=0.42,rounding_size=0.18",
+                "facecolor": face,
+                "edgecolor": edge,
+                "linewidth": 1.5,
+            },
+        )
+        return {"x": x, "y": y, "width": width, "height": height}
+
+    def arrow(start, end, color="#375a7f", rad=0.0, label=None, label_offset=(0, 0)):
+        patch = FancyArrowPatch(
+            start,
+            end,
+            arrowstyle="-|>",
+            mutation_scale=16,
+            linewidth=1.8,
+            color=color,
+            connectionstyle=f"arc3,rad={rad}",
+        )
+        ax.add_patch(patch)
+        if label:
+            ax.text(
+                (start[0] + end[0]) / 2 + label_offset[0],
+                (start[1] + end[1]) / 2 + label_offset[1],
+                label,
+                ha="center",
+                va="center",
+                fontsize=8.8,
+                color=color,
+            )
+
+    box(1.15, 3.85, "Network\nON or OFF", face="#f3f6f8", edge="#5e728f")
+    box(3.35, 3.85, "Trial demand\n$q$", face="#f3f6f8", edge="#5e728f")
+    box(5.75, 3.85, "Wardrop route\nassignment", face="#eef4f8", edge="#375a7f")
+    box(8.25, 3.85, "Network cost\n$c(q)$", face="#eef4f8", edge="#375a7f")
+    box(5.75, 1.65, "Inverse demand\n$C(q)=A-Bq$", face="#f6f0f3", edge="#5b1136")
+    box(8.25, 1.65, "Equilibrium\n$c(q^*)=C(q^*)$", face="#eff6f4", edge="#2f7f95")
+    box(3.35, 1.65, "Adjust $q$\nif costs differ", face="#fff7ed", edge="#c1702b")
+
+    arrow((2.12, 3.85), (2.72, 3.85), color="#5e728f")
+    arrow((4.22, 3.85), (4.82, 3.85), color="#375a7f")
+    arrow((6.78, 3.85), (7.42, 3.85), color="#375a7f")
+    arrow((8.25, 3.35), (8.25, 2.2), color="#375a7f")
+    arrow((6.75, 1.65), (7.35, 1.65), color="#5b1136")
+    arrow((7.25, 1.65), (4.35, 1.65), color="#c1702b")
+    arrow((3.35, 2.15), (3.35, 3.35), color="#c1702b", label="iterate", label_offset=(0.47, 0))
+
+    ax.text(
+        5,
+        4.85,
+        "Elastic-demand equilibrium is a feedback fixed point, not a sequential afterthought",
+        ha="center",
+        va="center",
+        fontsize=14,
+        fontweight="bold",
+        color="#183456",
+    )
+    ax.text(
+        5,
+        0.45,
+        "Adding the candidate link changes the network cost relation; demand and route flows settle together where generalized cost equals willingness to pay.",
+        ha="center",
+        va="center",
+        fontsize=9.4,
+        color="#5e728f",
+    )
     fig.tight_layout()
-    save(fig, "figure-3-class-counts")
+    save(fig, "figure-3-elastic-feedback")
 
 
 def main():
@@ -239,7 +306,7 @@ def main():
     rows = read_csv(DATA / "elastic-outcome-space.csv")
     plot_default_comparison(summary)
     plot_outcome_space(rows)
-    plot_class_counts(summary)
+    plot_elastic_feedback()
 
 
 if __name__ == "__main__":

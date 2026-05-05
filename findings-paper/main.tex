@@ -4,6 +4,7 @@
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage[sort&compress,round,semicolon,authoryear]{natbib}
 \usepackage[figurename=Fig.,labelfont=bf,labelsep=period]{caption}
@@ -46,7 +47,14 @@ Elastic demand uses inverse demand
 \[
 C(q)=A-Bq.
 \]
-The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand intercept remains \(A/B=6\). For each trial \(q\), the model solves fixed-demand equilibrium and compares equilibrium cost with \(A-Bq\). A bisection loop finds the quantity where willingness to pay equals equilibrium cost.
+The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand intercept remains \(A/B=6\). Computationally, the model uses an outer bisection on \(q\); for each trial quantity, it solves Wardrop equilibrium and compares the resulting network cost with \(A-Bq\). Conceptually, the elastic-demand solution is a fixed point where route flows and demand agree simultaneously: \(c(q^*)=C(q^*)\) (Fig.~\ref{fig:feedback}).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/figure-3-elastic-feedback.jpeg}
+  \caption{Elastic-demand feedback. The numerical method iterates over trial quantities, but the object being solved is the fixed point where user-equilibrium generalized cost equals willingness to pay.}
+  \label{fig:feedback}
+\end{figure}
 
 The Braess flag is \(c_{\mathrm{on}}-c_{\mathrm{off}}>10^{-5}\). The reduced-demand flag is Braess plus \(q_{\mathrm{on}}<q_{\mathrm{off}}\). I also sweep \(A\in[90,270]\), \(B\in[15,45]\), and the variable-link coefficient \(b\in[4,16]\), using 13, 11, and 4 steps respectively, for 572 grid points. Code, CSV output, and figures are generated from the same repository as the browser app.
 
@@ -54,9 +62,9 @@ The Braess flag is \(c_{\mathrm{on}}-c_{\mathrm{off}}>10^{-5}\). The reduced-dem
 
 The fixed-demand default reproduces the Braess paradox. Without the added link, equilibrium cost is 75.00. With the added link, equilibrium cost is 90.00, a 15.00-unit increase. Total travel time rises from 450.00 to 540.00.
 
-The elastic-demand default converts the same network effect into reduced demand. With \(A=180\) and \(B=30\), the added link raises equilibrium cost from 64.29 to 72.00 and lowers equilibrium demand from 3.86 to 3.60 (Fig.~\ref{fig:default}). The result is the induced-demand comparative static with the network-cost sign reversed: the link changes equilibrium route costs first, and the elastic-demand curve then selects the lower quantity.
+The elastic-demand default converts the same network effect into reduced demand. With \(A=180\) and \(B=30\), the added link raises equilibrium cost from 64.29 to 72.00 and lowers equilibrium demand from 3.86 to 3.60 (Fig.~\ref{fig:default}). The result is the induced-demand comparative static with the network-cost sign reversed: the added link changes the network equilibrium cost relation, and demand adjusts until generalized cost equals willingness to pay.
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{figures/figure-1-default-comparison.jpeg}
 \caption{Default Braess comparison. The first panel shows the directed Braess network and link performance functions; the demand-curve panel places the OFF and ON elastic equilibria on \(C(q)\); the remaining panels compare cost and demand under fixed and elastic assumptions.}
@@ -65,7 +73,7 @@ The elastic-demand default converts the same network effect into reduced demand.
 
 The outcome-space sweep shows that the connection is not isolated to one hand-picked demand curve. Of 572 A-B-\(b\) grid points, 277 (48.4\%) show Braess paradox with reduced demand, 40 (7.0\%) show Braess paradox with no demand change within tolerance, 8 (1.4\%) show no paradox with no demand change, and 247 (43.2\%) show no paradox with increased demand (Table~\ref{tab:classes}; Fig.~\ref{fig:space}). The two sign-inconsistent cases under a downward-sloping inverse-demand curve, Braess with increased demand and no Braess with reduced demand, have zero grid points.
 
-\begin{table}[ht]
+\begin{table}[H]
   \centering
   \begin{tabular}{lrr}
     \toprule
@@ -83,7 +91,7 @@ The outcome-space sweep shows that the connection is not isolated to one hand-pi
   \label{tab:classes}
 \end{table}
 
-\begin{figure}[ht]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{figures/figure-2-elastic-outcome-space.jpeg}
   \caption{Elastic-demand outcome space over inverse-demand intercept \(A\), inverse-demand slope \(B\), and variable-link coefficient \(b\).}
