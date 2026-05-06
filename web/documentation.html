@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BRAESS student documentation</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; line-height: 1.5; color: #17231f; background: #f7f9f6; }
+    body { margin: 0; }
+    main { max-width: 920px; margin: 0 auto; padding: 32px 20px 48px; }
+    header { border-bottom: 3px solid #d7e1d2; margin-bottom: 24px; padding-bottom: 16px; }
+    h1 { font-size: 2rem; margin: 0 0 8px; }
+    h2 { font-size: 1.25rem; margin-top: 28px; }
+    p { max-width: 76ch; }
+    li { margin: 0.35rem 0; }
+    .button { display: inline-block; padding: 0.7rem 1rem; background: #174f3f; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 700; }
+    .note { background: #fff; border-left: 4px solid #b74f17; padding: 0.9rem 1rem; }
+    code { background: #edf1eb; padding: 0.12rem 0.25rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p><a href="./index.html">Open BRAESS</a></p>
+      <h1>BRAESS: Braess Paradox Explorer</h1>
+      <p>BRAESS demonstrates fixed-demand and elastic-demand user equilibrium on a small editable network.</p>
+      <p><a class="button" href="./braess-samples.zip">Download sample files</a></p>
+    </header>
+    <section>
+      <h2>Quick Start</h2>
+      <ol>
+        <li>Click Load Braess Example.</li>
+        <li>Click Solve both cases to compare the network with and without the candidate link.</li>
+        <li>Switch between fixed demand and elastic demand to see how demand responds to higher cost.</li>
+        <li>Click links or nodes in the network editor to inspect or change parameters.</li>
+      </ol>
+    </section>
+    <section>
+      <h2>Example Uses</h2>
+      <ul>
+        <li>Classic paradox: keep fixed demand at 6 and compare candidate link off versus on.</li>
+        <li>Elastic response: use the default elastic demand curve and compare equilibrium demand in both cases.</li>
+        <li>Sensitivity: run a sweep and export the CSV for plotting or discussion.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Things To Notice</h2>
+      <ul>
+        <li>The app uses built-in preset files; the samples zip exposes those files for inspection.</li>
+        <li>This module is intended for small teaching examples, not city-scale assignment.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>References</h2>
+      <ul>
+        <li>Braess, D. (1968). Uber ein Paradoxon aus der Verkehrsplanung. Unternehmensforschung, 12(1), 258-268. <a href="https://doi.org/10.1007/BF01918335">https://doi.org/10.1007/BF01918335</a></li>
+        <li>Braess, D., Nagurney, A., and Wakolbinger, T. (2005). On a Paradox of Traffic Planning. Transportation Science, 39(4), 446-450. <a href="https://doi.org/10.1287/trsc.1050.0127">https://doi.org/10.1287/trsc.1050.0127</a></li>
+        <li>Levinson, D. (2026). Braess Explorer: Browser-only Braess paradox and elastic-demand model. Software. <a href="https://github.com/dlevinson/braess-js">https://github.com/dlevinson/braess-js</a></li>
+        <li>Liao, C.-F., Liu, H. X., and Levinson, D. M. (2009). Simulating Transportation for Realistic Engineering Education and Training: Engaging Undergraduate Students in Transportation Studies. Transportation Research Record, 2109, 12-21. <a href="https://doi.org/10.3141/2109-02">https://doi.org/10.3141/2109-02</a></li>
+        <li>Original STREET project: Simulating Transportation for Realistic Engineering Education and Training, University of Minnesota legacy project site. <a href="http://street.umn.edu">http://street.umn.edu</a></li>
+      </ul>
+    </section>
+    <section class="note">
+      <h2>Browser Notes</h2>
+      <p>The app runs locally in the browser. Keep the files from the app upload folder together so <code>index.html</code> can load its JavaScript, CSS, and assets by relative path.</p>
+    </section>
+  </main>
+</body>
+</html>
