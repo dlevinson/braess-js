@@ -5708,7 +5708,7 @@
   } = {}) {
     container.innerHTML = "";
     if (!networkData) {
-      container.innerHTML = `<p class="empty-state">Load the Braess example or upload GMNS files to draw the network.</p>`;
+      container.innerHTML = `<p class="empty-state">Load the Braess example to draw the editable network.</p>`;
       return;
     }
     const width = container.clientWidth || 760;
