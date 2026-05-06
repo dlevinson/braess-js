@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use Braess Explorer or the accompanying paper artifacts, please cite this repository."
+title: "Braess Explorer: Browser-only Braess paradox and elastic-demand model"
+type: software
+authors:
+  - family-names: Levinson
+    given-names: David
+repository-code: "https://github.com/dlevinson/braess-js"
+url: "https://github.com/dlevinson/braess-js"
+version: "0.1.0"
+date-released: "2026-05-06"
+license: MIT
+abstract: "A browser-only JavaScript app and reproducible Findings-style paper artifacts for exploring the Braess paradox, elastic demand, and reduced demand."

@@ -27,3 +27,7 @@ The plotting script writes 300-DPI JPEGs and SVG copies in `figures/`.
 - `data/*.csv`
 
 The body follows the Findings spine: `Questions`, `Methods`, and `Findings`.
+
+## License
+
+The manuscript, figures, exported CSV/JSON data, and other research artifacts in this directory are licensed under Creative Commons Attribution 4.0 International (CC BY 4.0), unless otherwise noted. See `LICENSE.md`.

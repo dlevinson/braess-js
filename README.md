@@ -116,6 +116,18 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
+## Citation
+
+If you use Braess Explorer or the accompanying paper artifacts, please cite this repository. GitHub should display citation metadata from `CITATION.cff`.
+
+```text
+Levinson, D. (2026). Braess Explorer: Browser-only Braess paradox and elastic-demand model. https://github.com/dlevinson/braess-js
+```
+
+## License
+
+Software code in this repository is licensed under the MIT License. The Findings paper, figures, exported data, and other research artifacts in `findings-paper/` are licensed under Creative Commons Attribution 4.0 International (CC BY 4.0), unless otherwise noted.
+
 ## Project Layout
 
 ```text
