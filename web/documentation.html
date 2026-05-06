@@ -13,7 +13,9 @@
     h2 { font-size: 1.25rem; margin-top: 28px; }
     p { max-width: 76ch; }
     li { margin: 0.35rem 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
     .button { display: inline-block; padding: 0.7rem 1rem; background: #174f3f; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 700; }
+    .button.secondary { background: #b74f17; }
     .note { background: #fff; border-left: 4px solid #b74f17; padding: 0.9rem 1rem; }
     code { background: #edf1eb; padding: 0.12rem 0.25rem; border-radius: 3px; }
   </style>
@@ -21,10 +23,9 @@
 <body>
   <main>
     <header>
-      <p><a href="./index.html">Open BRAESS</a></p>
       <h1>BRAESS: Braess Paradox Explorer</h1>
       <p>BRAESS demonstrates fixed-demand and elastic-demand user equilibrium on a small editable network.</p>
-      <p><a class="button" href="./braess-samples.zip">Download sample files</a></p>
+      <p class="actions"><a class="button" href="./index.html">Run app</a></p>
     </header>
     <section>
       <h2>Quick Start</h2>
@@ -46,7 +47,7 @@
     <section>
       <h2>Things To Notice</h2>
       <ul>
-        <li>The app uses built-in preset files; the samples zip exposes those files for inspection.</li>
+        <li>The app uses a built-in preset and direct map editing; there is no CSV upload or sample-file workflow in the public app.</li>
         <li>This module is intended for small teaching examples, not city-scale assignment.</li>
       </ul>
     </section>
@@ -59,10 +60,6 @@
         <li>Liao, C.-F., Liu, H. X., and Levinson, D. M. (2009). Simulating Transportation for Realistic Engineering Education and Training: Engaging Undergraduate Students in Transportation Studies. Transportation Research Record, 2109, 12-21. <a href="https://doi.org/10.3141/2109-02">https://doi.org/10.3141/2109-02</a></li>
         <li>Original STREET project: Simulating Transportation for Realistic Engineering Education and Training, University of Minnesota legacy project site. <a href="http://street.umn.edu">http://street.umn.edu</a></li>
       </ul>
-    </section>
-    <section class="note">
-      <h2>Browser Notes</h2>
-      <p>The app runs locally in the browser. Keep the files from the app upload folder together so <code>index.html</code> can load its JavaScript, CSS, and assets by relative path.</p>
     </section>
   </main>
 </body>
