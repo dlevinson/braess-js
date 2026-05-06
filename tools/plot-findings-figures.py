@@ -170,7 +170,7 @@ def plot_default_comparison(summary):
         ax.spines[["top", "right"]].set_visible(False)
         ax.grid(axis="y", alpha=0.18)
     fig.suptitle("Default Braess case", fontsize=15, fontweight="bold")
-    fig.text(0.5, -0.02, "The same added-link cost increase is evaluated under fixed demand and under C(q) = 180 - 30q.", ha="center", color="#5e728f")
+    fig.text(0.5, -0.02, "The same network change is evaluated under fixed demand and under C(q) = 180 - 30q.", ha="center", color="#5e728f")
     fig.tight_layout()
     save(fig, "figure-1-default-comparison")
 
