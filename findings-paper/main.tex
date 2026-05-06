@@ -43,7 +43,7 @@ t_1(x)=10x,\quad t_4(x)=10x,\quad t_2(x)=45,\quad t_3(x)=45,\quad t_5(x)=0,
 \]
 with fixed demand \(q=6\). The candidate link is solved both off and on.
 
-For each scenario, the model enumerates all simple origin-destination paths and solves static Wardrop user equilibrium by Method of Successive Averages \citep{sheffi1985urban}. At each iteration, link costs are evaluated from current flows, all demand is assigned to the current shortest path, and path flows are averaged using the diminishing step size \(1/k\). This averaging is the convergence device: it damps path switching. The stopping tolerance is \(10^{-6}\) after at least five iterations, with a 120-iteration maximum. For the nonnegative affine and Bureau of Public Roads-style separable link costs used here, this is the standard monotone user-equilibrium setting. I do not claim convergence for arbitrary non-monotone user-edited cost functions.
+For each scenario, the model enumerates all simple origin-destination paths and solves static Wardrop user equilibrium by Method of Successive Averages \citep{sheffi1985urban}. At each iteration, link costs are evaluated from current flows, all demand is assigned to the current shortest path, and path flows are averaged using the diminishing step size \(1/k\). This averaging is the convergence device: it damps path switching. The stopping tolerance is \(10^{-6}\) after at least five iterations, with a 120-iteration maximum. For the nonnegative affine and Bureau of Public Roads-style separable link costs used here, this is the standard monotone user-equilibrium setting.
 
 Elastic demand uses inverse demand
 \[
@@ -58,19 +58,19 @@ The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand in
     \toprule
     Symbol & Definition \\
     \midrule
-    \(x\) & Flow on a link. \\
-    \(t_i(x)\) & Travel time on link \(i\) when its flow is \(x\). \\
-    \(q\) & Origin-destination demand in a fixed-demand or trial elastic-demand solve. \\
-    \(q^*\) & Elastic-demand equilibrium quantity. \\
-    \(C(q)\) & Inverse-demand generalized cost, or willingness to pay, at quantity \(q\). \\
     \(A\) & Zero-trip willingness-to-pay intercept in \(C(q)=A-Bq\). \\
     \(B\) & Inverse-demand slope; larger \(B\) means willingness to pay falls faster with \(q\). \\
+    \(b\) & Congestion coefficient on the swept variable-cost links. \\
+    \(C(q)\) & Inverse-demand generalized cost, or willingness to pay, at quantity \(q\). \\
     \(c(q)\) & Wardrop equilibrium origin-destination cost after assigning quantity \(q\). \\
-    \(s\) & Scenario index, either candidate link off or candidate link on. \\
     \(c_s(q_s^*)\) & Elastic equilibrium network cost in scenario \(s\). \\
     \(c_{\mathrm{on}}, c_{\mathrm{off}}\) & Equilibrium costs with the candidate link on and off. \\
+    \(q\) & Origin-destination demand in a fixed-demand or trial elastic-demand solve. \\
+    \(q^*\) & Elastic-demand equilibrium quantity. \\
     \(q_{\mathrm{on}}, q_{\mathrm{off}}\) & Elastic equilibrium quantities with the candidate link on and off. \\
-    \(b\) & Congestion coefficient on the swept variable-cost links. \\
+    \(s\) & Scenario index, either candidate link off or candidate link on. \\
+    \(t_i(x)\) & Travel time on link \(i\) when its flow is \(x\). \\
+    \(x\) & Flow on a link. \\
     \bottomrule
   \end{tabular}
   \caption{Nomenclature for the model equations and comparison tests.}
@@ -106,7 +106,7 @@ The default elastic case sets \(A=180\) and \(B=30\), so the zero-cost demand in
     \draw[arrow] (cost) -- (compare);
     \draw[arrow] (inverse) -- (compare);
     \draw[arrow] (compare) -- node[above, font=\scriptsize] {yes} (equilibrium);
-    \draw[arrow] (compare) to[out=205,in=0] node[below, font=\scriptsize] {no} (adjust);
+    \draw[arrow] (compare.south) -- ++(0,-0.42) -| node[pos=0.22, below, font=\scriptsize] {no} (adjust.south);
     \draw[arrow] (adjust) -- node[left, font=\scriptsize] {iterate} (trial);
   \end{tikzpicture}
   \caption{Elastic-demand feedback. The numerical method iterates over trial quantities, but the object being solved is the fixed point where user-equilibrium generalized cost equals willingness to pay.}
